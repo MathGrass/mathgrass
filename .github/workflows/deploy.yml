@@ -15,8 +15,9 @@ jobs:
         with:
           python-version: 3.x
       - name: Build Documentation
-        run: pip install -r requirements.txt 
-        run: mkdocs build --strict --verbose
+        run: |
+          pip install -r requirements.txt 
+          mkdocs build --strict --verbose
       - name: Deploy Documentation
         uses: JamesIves/github-pages-deploy-action@4.1.1
         with:
