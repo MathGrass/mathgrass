@@ -1,0 +1,9 @@
+site_name: MathGrass
+theme: readthedocs
+nav:
+  - 'index.md'
+  - 'features.md'
+  - 'installation.md'
+  - 'usage_instructor.md'
+  - 'usage_student.md'
+  - 'dev_docs.md'
