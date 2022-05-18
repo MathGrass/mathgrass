@@ -1,15 +1,23 @@
-name: deploy-to-pages 
+name: Deploy Documentation to GitHub Pages
 on:
   push:
     branches:
       - main
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Build Documentation
+        uses: actions/setup-python@v2
         with:
           python-version: 3.x
-      - run: pip install mkdocs 
-      - run: mkdocs gh-deploy --force
+        run: pip install -r requirements.txt 
+        run: mkdocs build --strict --verbose
+      - name: Deploy Documentation
+        uses: JamesIves/github-pages-deploy-action@4.1.1
+        with:
+          branch: gh-pages
+          folder: site
