@@ -22,34 +22,3 @@ jobs:
         with:
           branch: gh-pages
           folder: site
-
-jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2.3.1
-
-      - name: Install and Build joint-js-evaluation
-        run: |
-          cd joint-js-evaluation
-          npm install
-          npm run build
-      - name: Deploy joint-js-evaluation
-        uses: JamesIves/github-pages-deploy-action@4.1.1
-        with:
-          branch: gh-pages
-          folder: joint-js-evaluation/dist
-          target-folder: joint-js-evaluation
-
-      - name: Install and Build diagram-js-evaluation
-        run: |
-          cd diagram-js-evaluation
-          npm install
-          npm run build
-      - name: Deploy diagram-js-evaluation
-        uses: JamesIves/github-pages-deploy-action@4.1.1
-        with:
-          branch: gh-pages
-          folder: diagram-js-evaluation/dist
-          target-folder: diagram-js-evaluation
