@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../../img/favicon.ico" />
+    <title>Evaluator (Python) - MathGrass</title>
+    <link rel="stylesheet" href="../../../css/theme.css" />
+    <link rel="stylesheet" href="../../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Evaluator (Python)";
+        var mkdocs_page_input_path = "developer_guide/backend/evaluator.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <script src="../../../js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../../.." class="icon icon-home"> MathGrass
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption"><span class="caption-text">General</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../..">About this Project</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../features/">Teaching and Learning with MathGrass</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Deployment</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../deployment/">Deployment</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Developer Guide (general)</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../quickstart/">Quickstart</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../architecture/">Architecture</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../openapi/">OpenAPI Specification for MathGrass</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Developer Guide (Backend)</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../concepts/">Concepts & Domain</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../API_Implementation/">API Implementation</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="./">Evaluator (Python)</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#docker-manager-docker_managerpy-and-docker_containerpy">Docker Manager (docker_manager.py and docker_container.py)</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#abstractevaluator-abstract_evaluatorpy">AbstractEvaluator (abstract_evaluator.py)</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#basicevaluator-basic_evaluatorpy">BasicEvaluator (basic_evaluator.py)</a>
+    </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Developer Guide (Frontend)</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../frontend/">General</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../..">MathGrass</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../.." class="icon icon-home" alt="Docs"></a> &raquo;</li>
+          <li>Developer Guide (Backend) &raquo;</li>
+      <li>Evaluator (Python)</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="evaluator-python">Evaluator (Python)</h1>
+<p>The Evaluator is a direct member of the Top Level Architecture and can be considered a microservice. It is responsible for the evaluation of submitted task solutions which are transferred by the API over the message bus. For isolation purposes it uses docker containers as computing instances for the actual evaluation process. Since the main purpose of this application is to evaluate mathematical tasks (especially tasks about graphs) every docker container used here is based on the Sage Math docker image.</p>
+<p>The basic configuration uses the <code>BasicEvaluator</code> (see below) in order to describe the procedure of the current evaluation process.</p>
+<h2 id="docker-manager-docker_managerpy-and-docker_containerpy">Docker Manager (<code>docker_manager.py</code> and <code>docker_container.py</code>)</h2>
+<p>The Docker Manager keeps track of allocated and free docker containers. Besided the preparation of the containers in advance it also removes them after they finished their respective evaluation request.
+As a result a docker container is only used for a single task solution evaluation. The reason behind that lays in the desired degree of isolation. 
+In order to decrease latency when doing so it is possible to specify a constant which descibes how many docker containers should be prepared in advance. Also a maximum can be declared but if this limit is reached further requests will be discared for now.</p>
+<h2 id="abstractevaluator-abstract_evaluatorpy">AbstractEvaluator (<code>abstract_evaluator.py</code>)</h2>
+<p>The AbstractEvaluator contains an interface in order enable the implementation of different evaluation procedures. It is kept lean:
+First, every sub instance of the AbstractEvaluator can declare the name of the message bus queue which it will receive requests from. And second it defines a callback which is invoked when the evaluator receives a message from the selected queue.</p>
+<h2 id="basicevaluator-basic_evaluatorpy">BasicEvaluator (<code>basic_evaluator.py</code>)</h2>
+<p>Once the basic evaluator receives an evaluation request (containing a request id, a taks id and the submitted soluation) it will trigger a bunch of steps. These consist of the following:
+- allocating a container using the docker manager
+- loading the graph as well as the evaluation script from the database using the task id
+- base64 encoding the just loaded graph and the submitted solution
+- uploading the script as a file (named eval.sage)
+- executing the script in the container with command <code>sage eval.sage &lt;answer-as-base64&gt; &lt;graph-as-base64&gt;</code></p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../API_Implementation/" class="btn btn-neutral float-left" title="API Implementation"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../../frontend/" class="btn btn-neutral float-right" title="General">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../API_Implementation/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../../frontend/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script>var base_url = '../../..';</script>
+    <script src="../../../js/theme_extra.js" defer></script>
+    <script src="../../../js/theme.js" defer></script>
+      <script src="../../../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>
