@@ -1,9 +1,18 @@
 site_name: MathGrass
 theme: readthedocs
 nav:
-  - 'index.md'
-  - 'features.md'
-  - 'deployment.md'
-  - 'usage_instructor.md'
-  - 'usage_student.md'
-  - 'dev_docs.md'
+  - General:
+    - 'index.md'
+    - 'features/index.md'
+  - Deployment:
+    - 'deployment/index.md'
+  - Developer Guide (general):
+    - 'developer_guide/quickstart.md'
+    - 'developer_guide/architecture.md'
+    - 'developer_guide/openapi.md'
+  - Developer Guide (Backend):
+    - 'developer_guide/backend/concepts.md'
+    - 'developer_guide/backend/API_Implementation.md'
+    - 'developer_guide/backend/evaluator.md'
+  - Developer Guide (Frontend):
+    - 'developer_guide/frontend/index.md'

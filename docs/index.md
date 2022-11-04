@@ -11,4 +11,4 @@ Furthermore, _MathGrass_ supports incremental hints, which simulate instructor a
 
 ## How to Read This Documentation
 
-This documentation contains the [set of features](features.md) that _MathGrass_ provides, information about the usage for either [instructors](usage_instructor.md) or [students](usage_student.md). Furthermore, there are notes about the [deployment](deployment.md) of a _MathGrass_ instance and  a [developer documentation](dev_docs.md).
+This documentation contains the [set of features](features/index.md) that _MathGrass_ provides, information about the usage for either instructors or students. Furthermore, there are notes about the [deployment](deployment/index.md) of a _MathGrass_ instance and  a [developer documentation](developer_guide/quickstart.md).

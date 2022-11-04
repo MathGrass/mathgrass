@@ -1,4 +1,4 @@
-# Developer Documentation
+# Quickstart
 ## Requirements
 Make sure that you have JDK>=17, Gradle, Docker, docker-compose, node>=18.12.0 with npm, and Python>=3.10 installed.
 
