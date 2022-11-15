@@ -110,9 +110,9 @@
 <p>Make sure that you have JDK&gt;=17, Gradle, Docker, docker-compose, node&gt;=18.12.0 with npm, and Python&gt;=3.10 installed.</p>
 <h2 id="set-up-your-development-environment">Set Up Your Development Environment</h2>
 <ol>
-<li>Clone the projects for the <a href="https://github.com/MathGrass/mathgrass-frontend">frontend</a> and the <a href="https://github.com/MathGrass/mathgrass-server">backend and evaluator</a> </li>
-<li>Start the dependencies of the API and the evaluator(PostGres &amp; RabbitMQ) either manually or the provided <a href="https://github.com/MathGrass/mathgrass-server/blob/develop/api/docker/mathgrass-backend-infrastructure.yaml">docker compose project</a> via <code>docker-compose -f mathgrass-backend-infrastructure.yaml up -d</code> in the folder <code>mathgrass-server/api/docker</code></li>
-<li>Import the gradle project under <code>mathgrass-server/api</code> into your favorite Java IDE and run the application (entrypoint: <code>MathgrassServerApplication.java</code>) with the Spring profile <code>demodata</code> (or not, if no demodata should be present).</li>
+<li>Clone the projects for the <a href="https://github.com/MathGrass/mathgrass-frontend">frontend</a>, the <a href="https://github.com/MathGrass/mathgrass-api">API Project</a>, and the <a href="https://github.com/MathGrass/mathgrass-local-mq-evaluator">evaluator project</a></li>
+<li>Start the dependencies of the API and the evaluator(PostGres &amp; RabbitMQ) either manually or the provided <a href="https://github.com/MathGrass/mathgrass-api/blob/develop/api/docker/mathgrass-backend-infrastructure.yaml">docker compose project</a> via <code>docker-compose -f mathgrass-backend-infrastructure.yaml up -d</code> in the folder <code>mathgrass-server/api/docker</code></li>
+<li>Import the gradle project under <code>mathgrass-api</code> into your favorite Java IDE and run the application (entrypoint: <code>MathgrassServerApplication.java</code>) with the Spring profile <code>demodata</code> (or not, if no demodata should be present).</li>
 <li>Import the React project under <code>mathgrass-frontend</code> into your favorite TypeScript IDE and run <code>npm install &amp;&amp; npm run start</code></li>
 <li>You can check whether the project has build correctly by checking the following paths on localhost:<ul>
 <li><a href="http://localhost:8080/swagger-ui/">Swagger UI (http://localhost:8080/swagger-ui/)</a></li>
