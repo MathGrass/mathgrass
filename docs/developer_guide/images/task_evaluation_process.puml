@@ -1,0 +1,13 @@
+@startuml
+Client -left-> TaskRequestEndpoint : 1. Request Task Evaluation
+EventBus --> Client : 7. Notify about Task Completion
+Client --> Database : 8. Fetch Task Result
+
+state TaskExecutionManager {
+  TaskRequestEndpoint --> TaskQueue : 2. Place Task in Queue
+  TaskExecutor --> TaskQueue : 3. Take Task from Queue
+  TaskExecutor --> TaskExecutor : 4. Execute Tasks
+  TaskExecutor --> EventBus : 6. Notify listeners about Task Completion
+  TaskExecutor --> Database : 5. Store Task Execution Result
+}
+@enduml

@@ -7,7 +7,8 @@ This page gives an overview over the functionality of the task management as wel
 > backend. It is basically an endpoint, which triggers the task execution and
 > can be called by actual clients.
 
-![Task evaluation process](../../images/task_evaluation_process.png)
+[comment]: <>(Image generated using PlantUML. Source: docs/developer_guide/images/task_evaluation_process.puml)
+![Task evaluation process](../images/task_evaluation_process.png)
 *General task execution process. The client sends a request to the task execution manager, which then evaluates 
 submitted task, stores the result in the database and notifies the client. The client can then fetch the result from 
 the database.*
