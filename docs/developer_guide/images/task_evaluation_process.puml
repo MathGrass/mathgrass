@@ -1,5 +1,5 @@
 @startuml
-Client -left-> TaskRequestEndpoint : 1. Request Task Evaluation
+Client --> TaskRequestEndpoint : 1. Request Task Evaluation
 EventBus --> Client : 7. Notify about Task Completion
 Client --> Database : 8. Fetch Task Result
 
