@@ -40,4 +40,5 @@ containing the task ID and the submitted answer is sent to the websocket server.
 the respective task result ID. Once the server has finished the evaluation, the result is sent to the client by 
 broadcasting the result to the respective channel. The client then unsubscribes from the channel and displays the result.
 
+[comment]: <>(Image generated using PlantUML. Source: docs/developer_guide/images/websocket_task_evaluation.puml)
 ![Task Evaluation Use Case](http://www.plantuml.com/plantuml/png/hP5DJiGm38NtFOMNi9WBi40ZVXPiAJr0sdXeH9g0xRJNnwg558O04c8NnNdVUtuviZYIiiHkO2Gu7AxXDWPC0bVGOyH9G1o_T7Qvptka5KddzweTO-0PffoIFWqvmOKl5D8pBBde-tpIsVAQauelMnOvhhWxW4iUk8nB43toXjJqxCl84uLHHHccsQblX5CcO-3gOd5xZYt834zw2GztRH8c_qL5-5QGvPEwIYReFy8PvsoRDf9rVyQA-OXSedmNR4ZyVql-I2BBqGfcXBF_DcFxhsO1DvITdnnBpQ-iV-l0ZjR17vFNk86jX3bljQmxOl9bYUy0)
