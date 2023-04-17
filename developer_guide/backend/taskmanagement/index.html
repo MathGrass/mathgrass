@@ -5,15 +5,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../../img/favicon.ico" />
-    <title>API Implementation - MathGrass</title>
+    <title>Task Management - MathGrass</title>
     <link rel="stylesheet" href="../../../css/theme.css" />
     <link rel="stylesheet" href="../../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
     
       <script>
         // Current page data
-        var mkdocs_page_name = "API Implementation";
-        var mkdocs_page_input_path = "developer_guide/backend/API_Implementation.md";
+        var mkdocs_page_name = "Task Management";
+        var mkdocs_page_input_path = "developer_guide/backend/taskmanagement.md";
         var mkdocs_page_url = null;
       </script>
     
@@ -65,13 +65,29 @@
               <ul class="current">
                   <li class="toctree-l1"><a class="reference internal" href="../concepts/">Concepts & Domain</a>
                   </li>
-                  <li class="toctree-l1 current"><a class="reference internal current" href="./">API Implementation</a>
-    <ul class="current">
-    </ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../API_Implementation/">API Implementation</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../evaluator/">Evaluator (Python)</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../taskmanagement/">Task Management</a>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="./">Task Management</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#task-execution">Task Execution</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#task-queue">Task Queue</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#configuration">Configuration</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#implementation-details">Implementation Details</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#task-manager">Task Manager</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#event-bus">Event Bus</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">Developer Guide (Frontend)</span></p>
@@ -94,7 +110,7 @@
   <ul class="wy-breadcrumbs">
     <li><a href="../../.." class="icon icon-home" alt="Docs"></a> &raquo;</li>
           <li>Developer Guide (Backend) &raquo;</li>
-      <li>API Implementation</li>
+      <li>Task Management</li>
     <li class="wy-breadcrumbs-aside">
     </li>
   </ul>
@@ -103,20 +119,55 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h3 id="api-implementation">API Implementation</h3>
-<ul>
-<li>The API relies on generated interfaces based on the OpenAPI specification</li>
-<li>The Gradle task <code>generateApi</code> needs to be executed before being able to run the project</li>
-<li>When the API is started the swagger UI is available at <code>http://localhost:8080/swagger-ui.html</code></li>
-<li>API und DB models are transformed to each other by classes that inherit from ModelTransformer under <code>src/main/java/de/tudresden/inf/st/mathgrassserver/transform</code></li>
-<li>Endpoints are described in OpenAPI specification</li>
-</ul>
+                <h1 id="task-management">Task Management</h1>
+<h2 id="overview">Overview</h2>
+<p>The task management is a core component of the backend. It is responsible for the management and execution of tasks.
+This page gives an overview over the functionality of the task management as well as some implementation details.</p>
+<blockquote>
+<p>Attention: This page refers to a client as the requester of a task evaluation. The client is in fact still part of the
+backend. It is basically an endpoint, which triggers the task execution and
+can be called by actual clients.</p>
+</blockquote>
+<p><img alt="Task evaluation process" src="../../images/task_evaluation_process.png" />
+<em>General task execution process. The client sends a request to the task execution manager, which then evaluates 
+submitted task, stores the result in the database and notifies the client. The client can then fetch the result from 
+the database.</em></p>
+<h2 id="task-execution">Task Execution</h2>
+<p>Since (especially dynamic) tasks may take a longer time to be processed, the task management was designed
+to be asynchronous. This means that the client does not need to wait for the task to be finished, but 
+gets a task result id instead. The client can then use this id to check the status of the task.
+Once the task has been processed an event is emitted over an event bus to notify the client about the completion
+of the task, upon which the client can retrieve the result of the task. The task executor is able to process multiple
+tasks at the same time using multiple threads.</p>
+<h2 id="task-queue">Task Queue</h2>
+<p>The task management uses a task queue to limit and manage the number of tasks that are executed at the same time.
+This is necessary, since the evaluation of dynamic tasks requires the instantiation of Docker containers, which can be
+quite expensive. If the task executor has reached its maximum number of tasks, a new task request will be placed in the
+queue and will be executed as soon as a slot is available.</p>
+<h2 id="configuration">Configuration</h2>
+<p>The task manager can be configured with three parameters:
+ - <code>corePoolSize</code>: Minimal number of threads kept alive in the thread pool. (Default: 1)
+ - <code>maxPoolSize</code>: Maximum number of threads in the thread pool. (Default: 5)
+ - <code>queueCapacity</code>: Maximum number of tasks that can be stored in the queue. (Default: Integer.MAX_VALUE)</p>
+<p>All parameters can be set in the <code>application.properties</code> file.</p>
+<h2 id="implementation-details">Implementation Details</h2>
+<h3 id="task-manager">Task Manager</h3>
+<p>The task manager is implemented using Springs <a href="https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/scheduling/concurrent/ThreadPoolTaskExecutor.html">ThreadPoolTaskExecutor</a>.
+It offers all necessary functionality to fit the requirements of the task management: 
+ - limit number of tasks executed at the same time -&gt; limit number of spawned Docker containers
+ - task queue to store tasks that cannot be executed at the moment
+ - asynchronous task execution
+ - easy to use in Spring applications</p>
+<h3 id="event-bus">Event Bus</h3>
+<p>The event bus is implemented using Googles <a href="https://guava.dev/releases/19.0/api/docs/com/google/common/eventbus/EventBus.html">Guava EventBus</a>.
+An alternative was using Springs integrated ApplicationEvents, which had the major problems of events shared between different threads.
+The advantage of the EventBus is that it is thread safe, allows to register multiple listeners for the same event and it is easier to use.</p>
               
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../concepts/" class="btn btn-neutral float-left" title="Concepts & Domain"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../evaluator/" class="btn btn-neutral float-right" title="Evaluator (Python)">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../evaluator/" class="btn btn-neutral float-left" title="Evaluator (Python)"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../../frontend/" class="btn btn-neutral float-right" title="General">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
   <hr/>
@@ -139,10 +190,10 @@
   <span class="rst-current-version" data-toggle="rst-current-version">
     
     
-      <span><a href="../concepts/" style="color: #fcfcfc">&laquo; Previous</a></span>
+      <span><a href="../evaluator/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
-      <span><a href="../evaluator/" style="color: #fcfcfc">Next &raquo;</a></span>
+      <span><a href="../../frontend/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>
