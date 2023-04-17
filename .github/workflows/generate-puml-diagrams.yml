@@ -1,0 +1,20 @@
+name: generate plantuml
+on: push
+paths:
+    - "**.pu"
+    - "**.puml"
+    - "**.pml"
+    - "**.plantuml"
+jobs:
+  generate_plantuml:
+    runs-on: ubuntu-latest
+    name: Generate PlantUML Diagrams
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+    - name: Generate Diagrams
+      id: plantuml
+      uses: grassedge/generate-plantuml-action@v1.5
+      with:
+        path: .
+        message: "Render PlantUML files"
