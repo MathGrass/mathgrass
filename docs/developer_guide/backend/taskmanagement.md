@@ -8,7 +8,7 @@ This page gives an overview over the functionality of the task management as wel
 > can be called by actual clients.
 
 [comment]: <>(Image generated using PlantUML. Source: docs/developer_guide/images/task_evaluation_process.puml)
-![Task evaluation process](../images/task_evaluation_process.png)
+![Task evaluation process](http://www.plantuml.com/plantuml/png/VP3TJiCm38NlynH-WKNY7_K2JOno1uB12tYT1z7IPDJs14AyErrIeafKk_I9lvFacxDW9zfwi_2EWi1iTWEloDibVIYnr66zYwxFApYnC8Hf0UezUaLnCPXwtwEtoeaUYYguil0OnMs-05TH1seHsvsdH8rkl4F15JBrrBM5UvBcFQylYTMBCImebABwanezy0yOy8qw-3OmzUBoasSbFHIVMdZosEGMS07IWO5HQ-p-KMUs7xS3jEbYUnmhGGNd5lAKOPv2YhWABeijxrWeKCVJtgPwHlukBBpqCMMisFep-MFc5DRQ-by0)
 *General task execution process. The client sends a request to the task execution manager, which then evaluates 
 submitted task, stores the result in the database and notifies the client. The client can then fetch the result from 
 the database.*
