@@ -6,7 +6,7 @@
 The documentation is served at the [github pages project for this repository](https://mathgrass.github.io/mathgrass/).
 
 ## Setup and Development
-You can find a setup guide [here](https://mathgrass.github.io/mathgrass/dev_docs/).
+You can find a setup guide [here](https://mathgrass.github.io/mathgrass/developer_guide/quickstart/).
 
 ## Usage
 

@@ -14,5 +14,6 @@ nav:
     - 'developer_guide/backend/concepts.md'
     - 'developer_guide/backend/API_Implementation.md'
     - 'developer_guide/backend/evaluator.md'
+    - 'developer_guide/backend/taskmanagement.md'
   - Developer Guide (Frontend):
     - 'developer_guide/frontend/index.md'
