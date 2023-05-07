@@ -21,6 +21,15 @@ Once the task has been processed an event is emitted over an event bus to notify
 of the task, upon which the client can retrieve the result of the task. The task executor is able to process multiple
 tasks at the same time using multiple threads.
 
+## Delayed Task Execution
+The process of requesting a task evaluation is asynchronous. First a task result is created, then a task is scheduled
+for execution and finally the task result ID is returned, which can then be used to register a listener for task 
+completion. However, especially when requesting the evaluation of static tasks, the execution of the task evaluation
+might be called directly and post the task evaluation completion event before the listener could be registered.
+To solve this issue a custom DelayedTaskExecutor was implemented, which is able to delay the execution of the task 
+evaluation. By adding a minimal delay of e.g. 50 ms the listener can be created before the task evaluation is finished
+in any circumstances.
+
 ## Task Queue
 The task management uses a task queue to limit and manage the number of tasks that are executed at the same time.
 This is necessary, since the evaluation of dynamic tasks requires the instantiation of Docker containers, which can be
@@ -32,6 +41,11 @@ The task manager can be configured with three parameters:
  - ``corePoolSize``: Minimal number of threads kept alive in the thread pool. (Default: 1)
  - ``maxPoolSize``: Maximum number of threads in the thread pool. (Default: 5)
  - ``queueCapacity``: Maximum number of tasks that can be stored in the queue. (Default: Integer.MAX_VALUE)
+
+> Note: The core pool size typically determines the number of tasks that can be executed in parallel. There are only new
+threads spawned if the number of tasks exceeds the core pool size. The maximum pool size determines the maximum number
+of threads that can be spawned in total. By default, the queueCapacity is set to a high number, so it is unlikely that
+threads are spawned than the core pool size.
 
 All parameters can be set in the ``application.properties`` file.
 

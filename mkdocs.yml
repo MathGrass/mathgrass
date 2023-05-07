@@ -17,3 +17,4 @@ nav:
     - 'developer_guide/backend/taskmanagement.md'
   - Developer Guide (Frontend):
     - 'developer_guide/frontend/index.md'
+    - 'developer_guide/frontend/testing.md'
