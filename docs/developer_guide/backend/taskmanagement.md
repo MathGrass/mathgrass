@@ -42,6 +42,11 @@ The task manager can be configured with three parameters:
  - ``maxPoolSize``: Maximum number of threads in the thread pool. (Default: 5)
  - ``queueCapacity``: Maximum number of tasks that can be stored in the queue. (Default: Integer.MAX_VALUE)
 
+> Note: The core pool size typically determines the number of tasks that can be executed in parallel. There are only new
+threads spawned if the number of tasks exceeds the core pool size. The maximum pool size determines the maximum number
+of threads that can be spawned in total. By default, the queueCapacity is set to a high number, so it is unlikely that
+threads are spawned than the core pool size.
+
 All parameters can be set in the ``application.properties`` file.
 
 ## Implementation Details
