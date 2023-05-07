@@ -5,15 +5,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../../img/favicon.ico" />
-    <title>API Implementation - MathGrass</title>
+    <title>Testing - MathGrass</title>
     <link rel="stylesheet" href="../../../css/theme.css" />
     <link rel="stylesheet" href="../../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
     
       <script>
         // Current page data
-        var mkdocs_page_name = "API Implementation";
-        var mkdocs_page_input_path = "developer_guide/backend/API_Implementation.md";
+        var mkdocs_page_name = "Testing";
+        var mkdocs_page_input_path = "developer_guide/frontend/testing.md";
         var mkdocs_page_url = null;
       </script>
     
@@ -62,23 +62,33 @@
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">Developer Guide (Backend)</span></p>
-              <ul class="current">
-                  <li class="toctree-l1"><a class="reference internal" href="../concepts/">Concepts & Domain</a>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../backend/concepts/">Concepts & Domain</a>
                   </li>
-                  <li class="toctree-l1 current"><a class="reference internal current" href="./">API Implementation</a>
-    <ul class="current">
-    </ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../backend/API_Implementation/">API Implementation</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../evaluator/">Evaluator (Python)</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../../backend/evaluator/">Evaluator (Python)</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../taskmanagement/">Task Management</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../../backend/taskmanagement/">Task Management</a>
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">Developer Guide (Frontend)</span></p>
-              <ul>
-                  <li class="toctree-l1"><a class="reference internal" href="../../frontend/">General</a>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../">General</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../frontend/testing/">Testing</a>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="./">Testing</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#frameworks">Frameworks</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#fundamentals">Fundamentals</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#testing-with-redux-store">Testing with Redux Store</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a>
+    </li>
+    </ul>
                   </li>
               </ul>
       </div>
@@ -95,8 +105,8 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../../.." class="icon icon-home" aria-label="Docs"></a> &raquo;</li>
-          <li>Developer Guide (Backend) &raquo;</li>
-      <li>API Implementation</li>
+          <li>Developer Guide (Frontend) &raquo;</li>
+      <li>Testing</li>
     <li class="wy-breadcrumbs-aside">
     </li>
   </ul>
@@ -105,20 +115,34 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h3 id="api-implementation">API Implementation</h3>
+                <h1 id="testing">Testing</h1>
+<h2 id="overview">Overview</h2>
+<p>This page explains the testing set up, as well as the basic testing fundamentals used for testing the frontend.</p>
+<h2 id="frameworks">Frameworks</h2>
+<p>Here are the two main frameworks used for testing JS code in general as well as React components:
+* <a href="https://jestjs.io">Jest</a> Main testing framework for JS/TS testing
+* <a href="https://babeljs.io">Babel</a> JavaScript compiler to compile Reacts JSX syntax to JavaScript</p>
+<h2 id="fundamentals">Fundamentals</h2>
 <ul>
-<li>The API relies on generated interfaces based on the OpenAPI specification</li>
-<li>The Gradle task <code>generateApi</code> needs to be executed before being able to run the project</li>
-<li>When the API is started the swagger UI is available at <code>http://localhost:8080/swagger-ui.html</code></li>
-<li>API und DB models are transformed to each other by classes that inherit from ModelTransformer under <code>src/main/java/de/tudresden/inf/st/mathgrassserver/transform</code></li>
-<li>Endpoints are described in OpenAPI specification</li>
+<li>Run all tests by executing following command in the root directory: <code>npm test</code></li>
+<li>Test file names shouold follow following structure to be detected by jest: <code>&lt;NAME OF COMPONENT TO TEST&gt;.test.&lt;js/ts/jsx/tsx&gt;</code></li>
+<li>Test files should be in the same directory as the component under test</li>
+<li>jest configuration file: https://github.com/MathGrass/mathgrass-frontend/blob/develop/jest.config.js</li>
+<li>babel configuration file: https://github.com/MathGrass/mathgrass-frontend/blob/develop/babel.config.json</li>
 </ul>
+<h2 id="testing-with-redux-store">Testing with Redux Store</h2>
+<p>A main aspect of the MathGrass Frontend application is the global redux store, which handles the applications state. There are two ways of testing with the redux store:
+* Work with a mocked store using <a href="https://github.com/reduxjs/redux-mock-store">redux-mock-store</a>
+* Work with an instance of the real store
+In order to work with the real store some dispatch functions have been added to make testing easier (e.g. resetting the store).</p>
+<h2 id="examples">Examples</h2>
+<p>So far only unit tests have been implemented. Examples of how to test React components can be seen in the test file for the <a href="https://github.com/MathGrass/mathgrass-frontend/blob/develop/src/components/assessment/assessment.test.tsx">assessment component</a>.
+To see an example of how a service is tested have a look at the <a href="https://github.com/MathGrass/mathgrass-frontend/blob/develop/src/websockets/websocketService.test.ts">websocket service test</a>.</p>
               
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../concepts/" class="btn btn-neutral float-left" title="Concepts & Domain"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../evaluator/" class="btn btn-neutral float-right" title="Evaluator (Python)">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../" class="btn btn-neutral float-left" title="General"><span class="icon icon-circle-arrow-left"></span> Previous</a>
     </div>
 
   <hr/>
@@ -141,10 +165,8 @@
   <span class="rst-current-version" data-toggle="rst-current-version">
     
     
-      <span><a href="../concepts/" style="color: #fcfcfc">&laquo; Previous</a></span>
+      <span><a href="../" style="color: #fcfcfc">&laquo; Previous</a></span>
     
-    
-      <span><a href="../evaluator/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>

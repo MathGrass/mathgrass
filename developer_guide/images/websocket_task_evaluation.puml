@@ -1,0 +1,14 @@
+@startuml
+User --> Client : Select task
+Client --> Server : Establish connection (during mount of component)
+User --> Client : Solve task and submit answer
+Client --> Server : Subscribe to channel for task evaluation with Task ID
+Client --> Server : Send task evaluation request with Task ID and submitted answer
+Server --> Client : Send task evaluation response with Task Result ID
+Client --> Server : Unsubscribe to channel for task evaluation with Task ID
+Client --> Server : Subscribe to channel for task result with Task Result ID
+Server --> Server : Evaluate task
+Server --> Client : Broadcast task result to channel with Task Result ID
+Client --> Client : Unsubscribe to channel for task result with Task Result ID
+Client --> User : Show task result
+@enduml
